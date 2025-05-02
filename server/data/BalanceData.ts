@@ -17,3 +17,9 @@ export const balanceDataSecond = [
   { value: 40 },
   { value: 50 },
 ];
+
+export const balanceData = {
+  value: "$5,789",
+  percentage: 46.9,
+  isPositive: true,
+};

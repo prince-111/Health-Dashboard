@@ -1,140 +1,131 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { SafeAreaView, ScrollView } from "react-native";
+import moment, { Moment } from "moment";
 import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  TouchableOpacity,
-  SafeAreaView,
-} from "react-native";
-import { Ionicons } from "@expo/vector-icons";
-import { StatusBar } from "expo-status-bar";
-import AppointmentCard from "../../components/AppointmentCard";
-import CalendarView from "../../components/CalendarView";
+  appointmentsCalendarData,
+  doctorsList,
+} from "@/server/data/CalendarData";
 
-export default function CalendarScreen() {
-  const [selectedDoctor, setSelectedDoctor] = useState("All Doctors");
-  const [selectedDate, setSelectedDate] = useState(new Date(2023, 3, 24)); // April 24, 2023
-  const [month, setMonth] = useState("April 2023");
+import { styles } from "@/components/calendar/styles";
+// import { Appointment } from "@/components/calendar/AppointmentCard";
+import { CalendarHeader } from "@/components/calendar/CalendarHeader";
+import { CalendarStripWrapper } from "@/components/calendar/CalendarStripWrapper";
+import { AppointmentList } from "@/components/calendar/AppointmentList";
+import { DoctorDropdown } from "@/components/calendar/DoctorDropdown";
 
-  const appointments = [
+const DoctorCalendarStrip: React.FC = () => {
+  const [selectedDate, setSelectedDate] = useState<Moment>(
+    moment("2025-04-24")
+  );
+  const [currentMonth, setCurrentMonth] = useState<Moment>(
+    moment("2025-04-24")
+  );
+  const [selectedDoctor, setSelectedDoctor] = useState<string>("All Doctors");
+  const [showDoctorDropdown, setShowDoctorDropdown] = useState<boolean>(false);
+  const [appointments, setAppointments] = useState<
     {
-      id: "1",
-      patientName: "Gyula Simonyi",
-      doctorName: "Dr. Sanjeet Shankar",
-      time: "09:00 - 12:00",
-      color: "#e0f2f1",
-    },
-    {
-      id: "2",
-      patientName: "Sneh Bagria",
-      doctorName: "Dr. Sanjeet Shankar",
-      time: "",
-      color: "#eeeeee",
-    },
-    {
-      id: "3",
-      patientName: "Parkarsh Parashar",
-      doctorName: "Dr. Sanjeet Shankar",
-      time: "09:00 - 12:00",
-      color: "#fff8e1",
-    },
-    {
-      id: "4",
-      patientName: "Dhruv Behl",
-      doctorName: "Dr. Sanjeet Shankar",
-      time: "09:00 - 12:00",
-      color: "#fff0e0",
-    },
-    {
-      id: "5",
-      patientName: "Sneh Bagria",
-      doctorName: "Dr. Sanjeet Shankar",
-      time: "09:00 - 12:00",
-      color: "#e0f2f1",
-    },
-  ];
+      id: string;
+      patientName: string;
+      doctor: string;
+      date: string;
+      timeSlot: string;
+      color: string;
+    }[]
+  >([]);
+
+  useEffect(() => {
+    const formattedDate = selectedDate.format("YYYY-MM-DD");
+    const filteredAppointments = appointmentsCalendarData.filter(
+      appointment => {
+        const dateMatches = appointment.date === formattedDate;
+        const doctorMatches =
+          selectedDoctor === "All Doctors" ||
+          appointment.doctor === selectedDoctor;
+        return dateMatches && doctorMatches;
+      }
+    );
+    setAppointments(filteredAppointments);
+  }, [selectedDate, selectedDoctor]);
+
+  const goToPreviousMonth = () => {
+    const prevMonth = moment(currentMonth).subtract(1, "month");
+    setCurrentMonth(prevMonth);
+    updateSelectedDateForMonth(prevMonth);
+  };
+
+  const goToNextMonth = () => {
+    const nextMonth = moment(currentMonth).add(1, "month");
+    setCurrentMonth(nextMonth);
+    updateSelectedDateForMonth(nextMonth);
+  };
+
+  const updateSelectedDateForMonth = (month: Moment) => {
+    const firstDayOfMonth = moment(month).startOf("month");
+    const appointmentsInMonth = appointmentsCalendarData.filter(
+      appointment =>
+        moment(appointment.date).format("YYYY-MM") === month.format("YYYY-MM")
+    );
+
+    if (appointmentsInMonth.length > 0) {
+      appointmentsInMonth.sort((a, b) => moment(a.date).diff(moment(b.date)));
+      setSelectedDate(moment(appointmentsInMonth[0].date));
+    } else {
+      setSelectedDate(firstDayOfMonth);
+    }
+  };
+
+  const customDatesStylesFunc = (date: Moment) => {
+    const formattedDate = date.format("YYYY-MM-DD");
+    const hasAppointments = appointmentsCalendarData.some(
+      appointment => appointment.date === formattedDate
+    );
+    const isSelectedDate =
+      selectedDate && formattedDate === selectedDate.format("YYYY-MM-DD");
+
+    if (isSelectedDate) {
+      return {
+        dateContainerStyle: styles.selectedDateContainer,
+        dateNameStyle: { color: "white" },
+        dateNumberStyle: { color: "white" },
+      };
+    } else if (hasAppointments) {
+      return {
+        dateContainerStyle: {
+          borderWidth: 1,
+          borderColor: "#84CC16",
+          borderRadius: 8,
+        },
+      };
+    }
+    return {};
+  };
+
+  const currentMonthYearText = currentMonth.format("MMMM YYYY");
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar style="auto" />
-      <View style={styles.header}>
-        {/* <TouchableOpacity>
-          <Ionicons name="arrow-back" size={24} color="black" />
-        </TouchableOpacity> */}
-        {/* <Text style={styles.headerTitle}>Calendar</Text>
-        <TouchableOpacity>
-          <Ionicons
-            name="ellipsis-horizontal-circle-outline"
-            size={24}
-            color="black"
-          />
-        </TouchableOpacity> */}
-      </View>
-
-      <View style={styles.doctorSelector}>
-        <Text style={styles.doctorLabel}>Doctors</Text>
-        <TouchableOpacity style={styles.doctorDropdown}>
-          <Text style={styles.doctorDropdownText}>{selectedDoctor}</Text>
-          <Ionicons name="chevron-down" size={20} color="black" />
-        </TouchableOpacity>
-      </View>
-
-      <CalendarView
-        month={month}
-        onMonthChange={setMonth}
-        selectedDate={selectedDate}
-        onDateSelect={setSelectedDate}
+      <DoctorDropdown
+        showDoctorDropdown={showDoctorDropdown}
+        setShowDoctorDropdown={setShowDoctorDropdown}
+        doctorsList={doctorsList}
+        setSelectedDoctor={setSelectedDoctor}
       />
-
-      <ScrollView style={styles.appointmentsContainer}>
-        {appointments.map(appointment => (
-          <AppointmentCard key={appointment.id} appointment={appointment} />
-        ))}
-      </ScrollView>
+      <CalendarHeader
+        currentMonthYearText={currentMonthYearText}
+        goToPreviousMonth={goToPreviousMonth}
+        goToNextMonth={goToNextMonth}
+        selectedDoctor={selectedDoctor}
+        setShowDoctorDropdown={setShowDoctorDropdown}
+      />
+      <CalendarStripWrapper
+        selectedDate={selectedDate}
+        setSelectedDate={setSelectedDate}
+        currentMonth={currentMonth}
+        customDatesStylesFunc={customDatesStylesFunc}
+      />
+      <AppointmentList appointments={appointments} />
     </SafeAreaView>
   );
-}
+};
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-  },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-  },
-  headerTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-  },
-  doctorSelector: {
-    backgroundColor: "#f1f5f9",
-    padding: 16,
-    marginHorizontal: 16,
-    marginVertical: 8,
-    borderRadius: 12,
-  },
-  doctorLabel: {
-    fontSize: 14,
-    color: "#64748b",
-    marginBottom: 4,
-  },
-  doctorDropdown: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
-  doctorDropdownText: {
-    fontSize: 16,
-    fontWeight: "600",
-  },
-  appointmentsContainer: {
-    flex: 1,
-    paddingHorizontal: 16,
-  },
-});
+export default DoctorCalendarStrip;

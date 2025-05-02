@@ -7,3 +7,8 @@ export const HeartRateData = [
   { value: 30 },
   { value: 10 },
 ];
+
+export const heartTopRateData = {
+  value: "97",
+  unit: "bpm",
+};
