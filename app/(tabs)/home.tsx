@@ -6,6 +6,7 @@ import {
   ScrollView,
   TouchableOpacity,
   SafeAreaView,
+  TextInput,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { StatusBar } from "expo-status-bar";
@@ -15,6 +16,7 @@ import ChartView from "../../components/ChartView";
 export default function HomeScreen() {
   const [filterPeriod, setFilterPeriod] = useState("Monthly");
   const [paymentFilter, setPaymentFilter] = useState("Payments");
+  const [activeTab, setActiveTab] = useState("booked");
 
   const balanceData = {
     value: "$5,789",
@@ -33,20 +35,64 @@ export default function HomeScreen() {
     isPositive: true,
   };
 
+  const appointmentData = {
+    booked: [
+      {
+        id: 1,
+        patient: "John Doe",
+        time: "10:00 AM",
+        date: "Apr 30",
+        type: "Checkup",
+      },
+      {
+        id: 2,
+        patient: "Jane Smith",
+        time: "02:30 PM",
+        date: "Apr 30",
+        type: "Follow-up",
+      },
+      {
+        id: 3,
+        patient: "Robert Johnson",
+        time: "11:15 AM",
+        date: "May 1",
+        type: "Consultation",
+      },
+    ],
+    cancelled: [
+      {
+        id: 4,
+        patient: "Sarah Williams",
+        time: "09:00 AM",
+        date: "Apr 29",
+        type: "Checkup",
+      },
+      {
+        id: 5,
+        patient: "Michael Brown",
+        time: "03:45 PM",
+        date: "Apr 28",
+        type: "Consultation",
+      },
+    ],
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
         <View style={styles.header}>
-          <TouchableOpacity>
-            <Ionicons name="arrow-back" size={24} color="black" />
-          </TouchableOpacity>
-          <Text style={styles.headerTitle}>Reports</Text>
           <View style={{ width: 24 }} />
         </View>
-
         <View style={styles.searchContainer}>
-          <Ionicons name="search" size={20} color="#64748b" />
-          <Text style={styles.searchPlaceholder}>Search here</Text>
+          <Ionicons name="search-outline" size={24} color="#888" />
+          <TextInput
+            placeholder="Search here"
+            placeholderTextColor="#888"
+            onChangeText={text => console.log(text)}
+            returnKeyType="search"
+            autoCorrect={false}
+            autoCapitalize="none"
+          />
         </View>
 
         <View style={styles.cardsContainer}>
@@ -68,24 +114,8 @@ export default function HomeScreen() {
           />
         </View>
 
+        {/* Chart Section  */}
         <View style={styles.chartSection}>
-          <View style={styles.chartHeader}>
-            <View style={styles.chartTitle}>
-              <Ionicons name="flash" size={16} color="#10b981" />
-              <Text style={styles.chartTitleText}>Reports</Text>
-            </View>
-            <View style={styles.filtersContainer}>
-              <TouchableOpacity style={styles.filterBtn}>
-                <Text style={styles.filterText}>{paymentFilter}</Text>
-                <Ionicons name="chevron-down" size={16} color="#000" />
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.filterBtn}>
-                <Text style={styles.filterText}>Vs {filterPeriod}</Text>
-                <Ionicons name="chevron-down" size={16} color="#000" />
-              </TouchableOpacity>
-            </View>
-          </View>
-
           <ChartView />
         </View>
 
@@ -117,37 +147,86 @@ export default function HomeScreen() {
             </View>
           </View>
 
-          <View style={styles.appointmentButtons}>
-            <TouchableOpacity style={styles.appointmentButton}>
-              <Ionicons name="call" size={20} color="#10b981" />
-              <Text style={styles.appointmentButtonText}>Booked</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.appointmentButton}>
-              <Ionicons name="calendar" size={20} color="#10b981" />
-              <Text style={styles.appointmentButtonText}>Cancelled</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-
-        <View style={styles.chartSection}>
-          <View style={styles.chartHeader}>
-            <View style={styles.chartTitle}>
-              <Ionicons name="flash" size={16} color="#10b981" />
-              <Text style={styles.chartTitleText}>Reports</Text>
-            </View>
-            <View style={styles.filtersContainer}>
-              <TouchableOpacity style={styles.filterBtn}>
-                <Text style={styles.filterText}>{paymentFilter}</Text>
-                <Ionicons name="chevron-down" size={16} color="#000" />
+          <View>
+            {/* Tab Buttons */}
+            <View style={styles.appointmentButtons}>
+              <TouchableOpacity
+                style={[
+                  styles.appointmentButton,
+                  activeTab === "booked" && styles.activeAppointmentButton,
+                ]}
+                onPress={() => setActiveTab("booked")}
+              >
+                <Ionicons
+                  name="checkmark-circle"
+                  size={20}
+                  color={activeTab === "booked" ? "#10b981" : "#9ca3af"}
+                />
+                <Text
+                  style={[
+                    styles.appointmentButtonText,
+                    activeTab === "booked" &&
+                      styles.activeAppointmentButtonText,
+                  ]}
+                >
+                  Booked
+                </Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.filterBtn}>
-                <Text style={styles.filterText}>Vs {filterPeriod}</Text>
-                <Ionicons name="chevron-down" size={16} color="#000" />
+
+              <TouchableOpacity
+                style={[
+                  styles.appointmentButton,
+                  activeTab === "cancelled" && styles.activeAppointmentButton,
+                ]}
+                onPress={() => setActiveTab("cancelled")}
+              >
+                <Ionicons
+                  name="close-circle"
+                  size={20}
+                  color={activeTab === "cancelled" ? "#ef4444" : "#9ca3af"}
+                />
+                <Text
+                  style={[
+                    styles.appointmentButtonText,
+                    activeTab === "cancelled" &&
+                      styles.activeAppointmentButtonText,
+                  ]}
+                >
+                  Cancelled
+                </Text>
               </TouchableOpacity>
             </View>
-          </View>
 
-          <ChartView />
+            {/* Appointment List */}
+            <View style={styles.appointmentList}>
+              {appointmentData[activeTab].map(appointment => (
+                <View key={appointment.id} style={styles.appointmentCard}>
+                  <View style={styles.appointmentTimeContainer}>
+                    <Text style={styles.appointmentTime}>
+                      {appointment.time}
+                    </Text>
+                    <Text style={styles.appointmentDate}>
+                      {appointment.date}
+                    </Text>
+                  </View>
+                  <View style={styles.appointmentDetails}>
+                    <Text style={styles.appointmentPatient}>
+                      {appointment.patient}
+                    </Text>
+                    <Text style={styles.appointmentType}>
+                      {appointment.type}
+                    </Text>
+                  </View>
+                  <Ionicons
+                    name={activeTab === "booked" ? "call" : "close"}
+                    size={20}
+                    color={activeTab === "booked" ? "#10b981" : "#ef4444"}
+                    style={styles.appointmentIcon}
+                  />
+                </View>
+              ))}
+            </View>
+          </View>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -284,10 +363,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginLeft: 2,
   },
-  appointmentButtons: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
   appointmentButton: {
     flexDirection: "row",
     alignItems: "center",
@@ -296,10 +371,91 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     borderRadius: 12,
     width: "48%",
+    marginRight: 10,
+  },
+
+  appointmentSection: {
+    backgroundColor: "#fff",
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 20,
+    elevation: 2,
+  },
+  appointmentHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 16,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: "600",
+    color: "#000",
+    marginRight: 12,
+  },
+  appointmentCount: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#000",
+    marginRight: 8,
+  },
+  appointmentButtons: {
+    flexDirection: "row",
+    marginBottom: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: "#e5e7eb",
+    paddingBottom: 8,
+  },
+  activeAppointmentButton: {
+    backgroundColor: "#f0fdf4",
   },
   appointmentButtonText: {
-    marginLeft: 8,
+    fontSize: 14,
     fontWeight: "500",
+    color: "#9ca3af",
+    marginLeft: 8,
+  },
+  activeAppointmentButtonText: {
+    color: "#10b981",
+    fontWeight: "600",
+  },
+  appointmentList: {
+    marginTop: 8,
+  },
+  appointmentCard: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: "#f3f4f6",
+  },
+  appointmentTimeContainer: {
+    width: 80,
+    marginRight: 16,
+  },
+  appointmentTime: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#000",
+  },
+  appointmentDate: {
+    fontSize: 12,
+    color: "#6b7280",
+  },
+  appointmentDetails: {
+    flex: 1,
+  },
+  appointmentPatient: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#000",
+    marginBottom: 4,
+  },
+  appointmentType: {
+    fontSize: 14,
+    color: "#6b7280",
+  },
+  appointmentIcon: {
+    marginLeft: "auto",
   },
 });
 
