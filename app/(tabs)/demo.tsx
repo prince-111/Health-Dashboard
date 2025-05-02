@@ -1,173 +1,314 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
   StyleSheet,
-  SafeAreaView,
-  TextInput,
-  StatusBar,
-  ScrollView,
   TouchableOpacity,
+  FlatList,
+  SafeAreaView,
+  Modal,
 } from "react-native";
-import { BarChart, LineChart } from "react-native-gifted-charts";
+import CalendarStrip from "react-native-calendar-strip";
+import moment from "moment";
 
-const ReportsScreen = () => {
-  const [activeTab, setActiveTab] = useState("booked");
+const DoctorCalendarStrip = () => {
+  const [selectedDate, setSelectedDate] = useState(moment("2025-04-24")); // Initialize with April 24, 2023
+  const [currentMonth, setCurrentMonth] = useState(moment("2025-04-24")); // Track current month view
+  const [selectedDoctor, setSelectedDoctor] = useState("All Doctors");
+  const [showDoctorDropdown, setShowDoctorDropdown] = useState(false);
+  const [appointments, setAppointments] = useState([]);
 
-  // Sample data
-  const appointmentData = {
-    booked: [
-      {
-        id: 1,
-        patient: "John Doe",
-        time: "10:00 AM",
-        date: "Apr 30",
-        type: "Checkup",
-      },
-      {
-        id: 2,
-        patient: "Jane Smith",
-        time: "02:30 PM",
-        date: "Apr 30",
-        type: "Follow-up",
-      },
-      {
-        id: 3,
-        patient: "Robert Johnson",
-        time: "11:15 AM",
-        date: "May 1",
-        type: "Consultation",
-      },
-    ],
-    cancelled: [
-      {
-        id: 4,
-        patient: "Sarah Williams",
-        time: "09:00 AM",
-        date: "Apr 29",
-        type: "Checkup",
-      },
-      {
-        id: 5,
-        patient: "Michael Brown",
-        time: "03:45 PM",
-        date: "Apr 28",
-        type: "Consultation",
-      },
-    ],
+  // Sample JSON data for doctors
+  const doctorsList = [
+    "All Doctors",
+    "Dr. Sanjeet Shankar",
+    "Dr. Emily Johnson",
+    "Dr. Robert Chen",
+  ];
+
+  // Sample JSON data for appointments
+  const appointmentData = [
+    {
+      id: "1",
+      patientName: "Gyula Simonyi",
+      doctor: "Dr. Sanjeet Shankar",
+      date: "2025-04-24", // Date in the image is April 24, 2023
+      timeSlot: "09:00 - 12:00",
+      color: "#DBEEFE", // light blue
+    },
+    {
+      id: "2",
+      patientName: "Sneh Bagria",
+      doctor: "Dr. Sanjeet Shankar",
+      date: "2025-04-24",
+      timeSlot: "",
+      color: "#E5E7EB", // light gray
+    },
+    {
+      id: "3",
+      patientName: "Parkarsh Parashar",
+      doctor: "Dr. Sanjeet Shankar",
+      date: "2025-04-24",
+      timeSlot: "09:00 - 12:00",
+      color: "#FEF9C3", // light yellow
+    },
+    {
+      id: "4",
+      patientName: "Dhruv Behl",
+      doctor: "Dr. Sanjeet Shankar",
+      date: "2025-04-24",
+      timeSlot: "09:00 - 12:00",
+      color: "#FFEDD5", // light orange
+    },
+    // Add some appointments in other months for testing
+    {
+      id: "5",
+      patientName: "John Smith",
+      doctor: "Dr. Emily Johnson",
+      date: "2025-05-15",
+      timeSlot: "10:00 - 11:00",
+      color: "#DBEEFE", // light blue
+    },
+    {
+      id: "6",
+      patientName: "Jane Doe",
+      doctor: "Dr. Robert Chen",
+      date: "2025-03-10",
+      timeSlot: "14:00 - 15:00",
+      color: "#FEF9C3", // light yellow
+    },
+  ];
+
+  useEffect(() => {
+    // Filter appointments based on selected date and doctor
+    const formattedDate = selectedDate.format("YYYY-MM-DD");
+
+    const filteredAppointments = appointmentData.filter(appointment => {
+      const dateMatches = appointment.date === formattedDate;
+      const doctorMatches =
+        selectedDoctor === "All Doctors" ||
+        appointment.doctor === selectedDoctor;
+
+      return dateMatches && doctorMatches;
+    });
+
+    setAppointments(filteredAppointments);
+  }, [selectedDate, selectedDoctor]);
+
+  // Handle previous month
+  const goToPreviousMonth = () => {
+    const prevMonth = moment(currentMonth).subtract(1, "month");
+    setCurrentMonth(prevMonth);
+    // Also update selected date to first day with appointments in the new month or first day of month
+    const firstDayOfMonth = moment(prevMonth).startOf("month");
+    const appointmentsInMonth = appointmentData.filter(
+      appointment =>
+        moment(appointment.date).format("YYYY-MM") ===
+        prevMonth.format("YYYY-MM")
+    );
+
+    if (appointmentsInMonth.length > 0) {
+      // Sort appointments by date and select the earliest
+      appointmentsInMonth.sort((a, b) => moment(a.date).diff(moment(b.date)));
+      setSelectedDate(moment(appointmentsInMonth[0].date));
+    } else {
+      setSelectedDate(firstDayOfMonth);
+    }
   };
 
-  // Chart data
-  const reportsData = [
-    { value: 100, label: "M" },
-    { value: 90, label: "T" },
-    { value: 80, label: "W" },
-    { value: 70, label: "T" },
-    { value: 60, label: "F" },
-  ];
+  // Handle next month
+  const goToNextMonth = () => {
+    const nextMonth = moment(currentMonth).add(1, "month");
+    setCurrentMonth(nextMonth);
+    // Also update selected date to first day with appointments in the new month or first day of month
+    const firstDayOfMonth = moment(nextMonth).startOf("month");
+    const appointmentsInMonth = appointmentData.filter(
+      appointment =>
+        moment(appointment.date).format("YYYY-MM") ===
+        nextMonth.format("YYYY-MM")
+    );
 
-  const paymentsData = [
-    { value: 95, label: "M" },
-    { value: 0, label: "T" },
-    { value: 1, label: "W" },
-    { value: 7, label: "T" },
-  ];
+    if (appointmentsInMonth.length > 0) {
+      // Sort appointments by date and select the earliest
+      appointmentsInMonth.sort((a, b) => moment(a.date).diff(moment(b.date)));
+      setSelectedDate(moment(appointmentsInMonth[0].date));
+    } else {
+      setSelectedDate(firstDayOfMonth);
+    }
+  };
+
+  // Render an appointment card
+  const renderAppointmentItem = ({ item }) => {
+    return (
+      <View style={[styles.appointmentCard, { backgroundColor: item.color }]}>
+        <View style={styles.appointmentHeader}>
+          <Text style={styles.patientName}>{item.patientName}</Text>
+          {item.timeSlot ? (
+            <View style={styles.timeSlot}>
+              <Text style={styles.timeText}>{item.timeSlot}</Text>
+            </View>
+          ) : null}
+        </View>
+        <Text style={styles.doctorLabel}>By {item.doctor}</Text>
+        <View style={styles.doctorInfo}>
+          <View style={styles.doctorAvatar}>
+            <Text>👨‍⚕️</Text>
+          </View>
+          <Text style={styles.doctorName}>Dr Shankar</Text>
+        </View>
+      </View>
+    );
+  };
+
+  // Custom date marker for CalendarStrip to match the UI in the image
+  const customDatesStylesFunc = date => {
+    // Format the current date to YYYY-MM-DD to match appointment dates
+    const formattedDate = date.format("YYYY-MM-DD");
+
+    // Check if this date has appointments
+    const hasAppointments = appointmentData.some(
+      appointment => appointment.date === formattedDate
+    );
+
+    // Check if this is the selected date
+    const isSelectedDate =
+      selectedDate && formattedDate === selectedDate.format("YYYY-MM-DD");
+
+    if (isSelectedDate) {
+      return {
+        dateContainerStyle: styles.selectedDateContainer,
+        dateNameStyle: { color: "white" },
+        dateNumberStyle: { color: "white" },
+      };
+    } else if (hasAppointments) {
+      return {
+        dateContainerStyle: {
+          borderWidth: 1,
+          borderColor: "#84CC16",
+          borderRadius: 8,
+        },
+      };
+    }
+
+    return {};
+  };
+
+  // Get the current month-year display text
+  const currentMonthYearText = currentMonth.format("MMMM YYYY");
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" />
-      <ScrollView>
-        {/* Header Section */}
-        <View style={styles.header}>
-          <Text style={styles.title}>Reports</Text>
-        </View>
+      {/* Header */}
+      <View style={styles.header}>
+        <TouchableOpacity style={styles.backButton}>
+          <Text style={styles.backButtonText}>←</Text>
+        </TouchableOpacity>
+        <Text style={styles.headerTitle}>Calendar</Text>
+        <TouchableOpacity style={styles.optionsButton}>
+          <Text style={styles.optionsButtonText}>⋯</Text>
+        </TouchableOpacity>
+      </View>
 
-        {/* Search Bar */}
-        <View style={styles.searchContainer}>
-          <TextInput
-            style={styles.searchInput}
-            placeholder="Search here"
-            placeholderTextColor="#999"
-          />
-        </View>
+      {/* Doctor Selection */}
+      <View style={styles.doctorSelector}>
+        <Text style={styles.doctorSelectorLabel}>Doctors</Text>
+        <TouchableOpacity
+          style={styles.doctorDropdownButton}
+          onPress={() => setShowDoctorDropdown(!showDoctorDropdown)}
+        >
+          <Text>{selectedDoctor}</Text>
+          <Text style={styles.dropdownArrow}>▼</Text>
+        </TouchableOpacity>
 
-        {/* Reports Chart */}
-        <View style={styles.chartCard}>
-          <Text style={styles.sectionTitle}>Reports</Text>
-          <BarChart
-            data={reportsData}
-            frontColor="#4ABFF4"
-            barWidth={22}
-            spacing={30}
-            roundedTop
-            yAxisTextStyle={{ color: "#666" }}
-            xAxisLabelTextStyle={{ color: "#666" }}
-            noOfSections={5}
-            maxValue={100}
-          />
-        </View>
+        {/* Doctor Dropdown Modal */}
+        <Modal
+          visible={showDoctorDropdown}
+          transparent={true}
+          animationType="slide"
+          onRequestClose={() => setShowDoctorDropdown(false)}
+        >
+          <TouchableOpacity
+            style={styles.modalOverlay}
+            activeOpacity={1}
+            onPress={() => setShowDoctorDropdown(false)}
+          >
+            <View style={styles.modalContent}>
+              <FlatList
+                data={doctorsList}
+                keyExtractor={(item, index) => index.toString()}
+                renderItem={({ item }) => (
+                  <TouchableOpacity
+                    style={styles.doctorOption}
+                    onPress={() => {
+                      setSelectedDoctor(item);
+                      setShowDoctorDropdown(false);
+                    }}
+                  >
+                    <Text style={styles.doctorOptionText}>{item}</Text>
+                  </TouchableOpacity>
+                )}
+              />
+            </View>
+          </TouchableOpacity>
+        </Modal>
+      </View>
 
-        {/* Appointments Section */}
-        <View style={styles.chartCard}>
-          <Text style={styles.sectionTitle}>Appointments</Text>
-          <Text style={styles.statValue}>184</Text>
-          <Text style={styles.percentage}>46.9%</Text>
+      {/* Month header with navigation */}
+      <View style={styles.monthNavigation}>
+        <TouchableOpacity
+          onPress={goToPreviousMonth}
+          style={styles.navButtonContainer}
+        >
+          <Text style={styles.navButton}>{"<"}</Text>
+        </TouchableOpacity>
+        <Text style={styles.monthYear}>{currentMonthYearText}</Text>
+        <TouchableOpacity
+          onPress={goToNextMonth}
+          style={styles.navButtonContainer}
+        >
+          <Text style={styles.navButton}>{">"}</Text>
+        </TouchableOpacity>
+      </View>
 
-          {/* Tabs */}
-          <View style={styles.tabContainer}>
-            <TouchableOpacity
-              style={[styles.tab, activeTab === "booked" && styles.activeTab]}
-              onPress={() => setActiveTab("booked")}
-            >
-              <Text
-                style={[
-                  styles.tabText,
-                  activeTab === "booked" && styles.activeTabText,
-                ]}
-              >
-                Booked
-              </Text>
-            </TouchableOpacity>
+      {/* Calendar Strip - Horizontal calendar as shown in the image */}
+      <CalendarStrip
+        scrollable
+        style={styles.calendarStrip}
+        calendarColor={"#FFFFFF"}
+        calendarHeaderStyle={styles.calendarHeader}
+        dateNumberStyle={styles.dateNumber}
+        dateNameStyle={styles.dateName}
+        highlightDateNumberStyle={styles.highlightDateNumber}
+        highlightDateNameStyle={styles.highlightDateName}
+        disabledDateNameStyle={styles.disabledDateName}
+        disabledDateNumberStyle={styles.disabledDateNumber}
+        iconContainer={{ flex: -3 }}
+        selectedDate={selectedDate}
+        onDateSelected={date => setSelectedDate(date)}
+        startingDate={moment(currentMonth).startOf("month")}
+        useIsoWeekday={false}
+        customDatesStyles={customDatesStylesFunc}
+        highlightDateContainerStyle={styles.selectedDateContainer}
+        maxDate={moment(currentMonth).endOf("month")}
+        minDate={moment(currentMonth).startOf("month")}
+        showMonth={false}
+      />
 
-            <TouchableOpacity
-              style={[
-                styles.tab,
-                activeTab === "cancelled" && styles.activeTab,
-              ]}
-              onPress={() => setActiveTab("cancelled")}
-            >
-              <Text
-                style=  {[
-                  styles.tabText,
-                  activeTab === "cancelled" && styles.activeTabText,
-                ]}
-              >
-                Cancelled
-              </Text>
-            </TouchableOpacity>
+      {/* Appointments List */}
+      <FlatList
+        data={appointments}
+        renderItem={renderAppointmentItem}
+        keyExtractor={item => item.id}
+        style={styles.appointmentsContainer}
+        showsVerticalScrollIndicator={false}
+        ListEmptyComponent={
+          <View style={styles.emptyListContainer}>
+            <Text style={styles.emptyListText}>
+              No appointments for this date
+            </Text>
           </View>
-
-          {/* Appointment List */}
-          <View style={styles.appointmentList}>
-            {appointmentData[activeTab].map(appointment => (
-              <View key={appointment.id} style={styles.appointmentItem}>
-                <View style={styles.appointmentTime}>
-                  <Text style={styles.appointmentTimeText}>
-                    {appointment.time}
-                  </Text>
-                  <Text style={styles.appointmentDate}>{appointment.date}</Text>
-                </View>
-                <View style={styles.appointmentDetails}>
-                  <Text style={styles.appointmentPatient}>
-                    {appointment.patient}
-                  </Text>
-                  <Text style={styles.appointmentType}>{appointment.type}</Text>
-                </View>
-              </View>
-            ))}
-          </View>
-        </View>
-      </ScrollView>
+        }
+      />
     </SafeAreaView>
   );
 };
@@ -175,138 +316,218 @@ const ReportsScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f8f9fa",
-    paddingHorizontal: 16,
+    backgroundColor: "#FFFFFF",
+    padding: 16,
   },
   header: {
-    alignItems: "center",
-    marginTop: 16,
-    marginBottom: 20,
-  },
-  time: {
-    fontSize: 14,
-    color: "#666",
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    color: "#000",
-  },
-  searchContainer: {
-    backgroundColor: "#fff",
-    borderRadius: 10,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    marginBottom: 20,
-    elevation: 2,
-  },
-  searchInput: {
-    fontSize: 16,
-    color: "#000",
-  },
-  statsRow: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginBottom: 20,
+    alignItems: "center",
+    marginBottom: 16,
   },
-  statCard: {
-    backgroundColor: "#fff",
+  backButton: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: "#F3F4F6",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  backButtonText: {
+    fontSize: 20,
+    fontWeight: "bold",
+  },
+  headerTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+  },
+  optionsButton: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: "#F3F4F6",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  optionsButtonText: {
+    fontSize: 20,
+    fontWeight: "bold",
+  },
+  doctorSelector: {
+    backgroundColor: "#F3F4F6",
     borderRadius: 12,
     padding: 16,
-    width: "30%",
-    alignItems: "center",
-    elevation: 2,
+    marginBottom: 16,
   },
-  statLabel: {
-    fontSize: 14,
-    color: "#666",
+  doctorSelectorLabel: {
+    fontSize: 16,
     marginBottom: 8,
   },
-  statValue: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#000",
+  doctorDropdownButton: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
-  smallChart: {
-    height: 40,
-    width: "100%",
+  dropdownArrow: {
+    fontSize: 12,
   },
-  chartCard: {
-    backgroundColor: "#fff",
+  modalOverlay: {
+    flex: 1,
+    justifyContent: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  modalContent: {
+    backgroundColor: "#FFFFFF",
+    margin: 20,
     borderRadius: 12,
     padding: 16,
-    marginBottom: 20,
-    elevation: 2,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
   },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: "600",
-    color: "#000",
-    marginBottom: 16,
-  },
-  percentage: {
-    fontSize: 16,
-    color: "#4ABFF4",
-    fontWeight: "bold",
-    marginBottom: 16,
-  },
-  tabContainer: {
-    flexDirection: "row",
-    borderBottomWidth: 1,
-    borderBottomColor: "#eee",
-    marginBottom: 16,
-  },
-  tab: {
-    paddingBottom: 8,
-    marginRight: 24,
-  },
-  activeTab: {
-    borderBottomWidth: 2,
-    borderBottomColor: "#4ABFF4",
-  },
-  tabText: {
-    fontSize: 16,
-    color: "#666",
-  },
-  activeTabText: {
-    color: "#4ABFF4",
-    fontWeight: "600",
-  },
-  appointmentList: {
-    marginTop: 8,
-  },
-  appointmentItem: {
-    flexDirection: "row",
+  doctorOption: {
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: "#f0f0f0",
+    borderBottomColor: "#F3F4F6",
   },
-  appointmentTime: {
-    width: 80,
-    marginRight: 16,
-  },
-  appointmentTimeText: {
+  doctorOptionText: {
     fontSize: 16,
-    fontWeight: "600",
-    color: "#000",
   },
-  appointmentDate: {
-    fontSize: 12,
-    color: "#666",
+  monthNavigation: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 16,
   },
-  appointmentDetails: {
+  navButtonContainer: {
+    padding: 8,
+    backgroundColor: "#F3F4F6",
+    borderRadius: 8,
+    width: 40,
+    height: 40,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  navButton: {
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+  monthYear: {
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+  calendarStrip: {
+    height: 120,
+    paddingTop: 1,
+    paddingBottom: 0,
+    marginBottom: 0,
+  },
+  calendarHeader: {
+    display: "none", // Hide the header since we have a custom one
+  },
+  dateNumber: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#4B5563",
+    marginBottom: 4, // Add bottom spacing for date numbers
+  },
+  dateName: {
+    fontSize: 14,
+    color: "#6B7280",
+    marginBottom: 4, // Add bottom spacing for date names
+  },
+  highlightDateNumber: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "white",
+    paddingBottom: 12, // Add bottom spacing
+  },
+  highlightDateName: {
+    fontSize: 10,
+    color: "white",
+    marginBottom: 4, // Add bottom spacing
+  },
+  disabledDateName: {
+    fontSize: 14,
+    color: "#D1D5DB",
+  },
+  disabledDateNumber: {
+    fontSize: 16,
+    color: "#D1D5DB",
+  },
+  selectedDateContainer: {
+    backgroundColor: "#84CC16",
+    borderRadius: 10,
+    width: 50,
+    height: 60,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 1, // Add more bottom padding to fix spacing
+  },
+  appointmentsContainer: {
     flex: 1,
   },
-  appointmentPatient: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: "#000",
-    marginBottom: 4,
+  appointmentCard: {
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 12,
   },
-  appointmentType: {
+  appointmentHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 8,
+  },
+  patientName: {
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  timeSlot: {
+    backgroundColor: "#FFFFFF",
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 16,
+  },
+  timeText: {
     fontSize: 14,
-    color: "#666",
+  },
+  doctorLabel: {
+    fontSize: 14,
+    color: "#6B7280",
+    marginBottom: 12,
+  },
+  doctorInfo: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  doctorAvatar: {
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    backgroundColor: "#E5E7EB",
+    justifyContent: "center",
+    alignItems: "center",
+    marginRight: 8,
+  },
+  doctorName: {
+    fontSize: 14,
+    color: "#6B7280",
+  },
+  emptyListContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 20,
+  },
+  emptyListText: {
+    fontSize: 16,
+    color: "#6B7280",
   },
 });
 
-export default ReportsScreen;
+export default DoctorCalendarStrip;
