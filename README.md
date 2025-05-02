@@ -16,35 +16,9 @@ This is an [Expo](https://expo.dev) project created with [`create-expo-app`](htt
     npx expo start
    ```
 
-In the output, you'll find options to open the app in a
+## snap of application
+![WhatsApp Image 2025-05-02 at 19 04 46_226178e8](https://github.com/user-attachments/assets/9ea66eee-5f97-41a6-b0a7-23dc0f981d5b)
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
-```
-
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+![WhatsApp Image 2025-05-02 at 19 05 03_6d938d0a](https://github.com/user-attachments/assets/68bb9983-f8f9-477a-a9a6-6772f7be795f)
+![WhatsApp Image 2025-05-02 at 19 05 24_95313efb](https://github.com/user-attachments/assets/1dfeed88-20f5-494d-a057-01540af6a7b1)
+![WhatsApp Image 2025-05-02 at 19 06 06_8f511558](https://github.com/user-attachments/assets/14e555b1-133f-44a6-a738-1b02dbed3324)
