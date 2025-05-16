@@ -8,7 +8,7 @@ export default function TabLayout() {
       initialRouteName="index"
       screenOptions={{
         tabBarActiveTintColor: "#10b981",
-        headerShown: true,
+        headerShown: false,
       }}
     >
       <Tabs.Screen
@@ -33,6 +33,28 @@ export default function TabLayout() {
         name="profile"
         options={{
           title: "Profile",
+          tabBarIcon: ({ color }) => (
+            <Ionicons name="person" size={24} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        // screenOptions={{ headerShown: false }}
+        name="appointment details"
+        options={{
+          headerShown: false,
+          // title: "Appointment Details",
+          tabBarIcon: ({ color }) => (
+            <Ionicons name="person" size={24} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        // screenOptions={{ headerShown: false }}
+        name="app test"
+        options={{
+          headerShown: false,
+          // title: "Add Appointment",
           tabBarIcon: ({ color }) => (
             <Ionicons name="person" size={24} color={color} />
           ),
