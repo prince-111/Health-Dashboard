@@ -12,8 +12,9 @@ import { CalendarHeader } from "@/components/calendar/CalendarHeader";
 import { CalendarStripWrapper } from "@/components/calendar/CalendarStripWrapper";
 import { AppointmentList } from "@/components/calendar/AppointmentList";
 import { DoctorDropdown } from "@/components/calendar/DoctorDropdown";
+import { HeaderComponent } from "@/components/HeaderComponent";
 
-const DoctorCalendarStrip: React.FC = () => {
+const DoctorCalendarStrip: React.FC = ({navigation}) => {
   const [selectedDate, setSelectedDate] = useState<Moment>(
     moment("2025-04-24")
   );
@@ -104,6 +105,13 @@ const DoctorCalendarStrip: React.FC = () => {
 
   return (
     <SafeAreaView style={styles.container}>
+     <HeaderComponent
+        title={"Calendar"}
+        rightButton={false}
+        onBackPress={() => {
+          navigation.goBack();
+        }}
+      />
       <DoctorDropdown
         showDoctorDropdown={showDoctorDropdown}
         setShowDoctorDropdown={setShowDoctorDropdown}

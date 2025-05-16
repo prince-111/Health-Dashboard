@@ -6,9 +6,11 @@ import {
   StyleSheet,
   ScrollView,
   SafeAreaView,
+  Image,
 } from "react-native";
 // Import correct React Native compatible icons
 import { Ionicons } from "@expo/vector-icons";
+import { HeaderComponent } from "@/components/HeaderComponent";
 
 // Sample data - this would be your custom JSON
 const appointmentData = {
@@ -39,117 +41,82 @@ const appointmentData = {
   },
 };
 // { navigation }
-const AppointmentDetails = ({ navigation }) => {
+const AppointmentDetails = () => {
   return (
     <SafeAreaView style={styles.container}>
       {/* Header */}
-      <View style={styles.headerContainer}>
-        <View style={styles.header}>
-          <TouchableOpacity
-            style={styles.backButton}
-            onPress={() => navigation.goBack()}
-          >
-            <Ionicons name="arrow-back" size={24} color="#000" />
-          </TouchableOpacity>
-          <Text style={styles.headerTitle}>Appointment Details</Text>
-        </View> 
-        <View style={styles.profileContainer}>
-        <View style={styles.profileRow}>
-          <View style={styles.avatar}></View>
-          <View style={styles.profileInfo}>
-            <Text style={styles.profileName}>
-              {appointmentData.patient.name}
-            </Text>
-            <Text style={styles.profileRole}>
-              {appointmentData.patient.role}
-            </Text>
-          </View>
-        </View>
-
-        <View style={styles.timeContainer}>
-          <Text style={styles.timeText}>
-            {appointmentData.appointment.time}{" "}
-            {appointmentData.appointment.date}
-          </Text>
-        </View>
-
-        <View style={styles.detailsRow}>
-          <View style={styles.detailColumn}>
-            <Text style={styles.detailLabel}>Patient no.</Text>
-            <Text style={styles.detailValue}>
-              {appointmentData.patient.patientNo}
-            </Text>
-          </View>
-          <View style={styles.detailColumn}>
-            <Text style={styles.detailLabel}>Gender</Text>
-            <Text style={styles.detailValue}>
-              {appointmentData.patient.gender}
-            </Text>
-          </View>
-          <View style={styles.detailColumn}>
-            <Text style={styles.detailLabel}>Age</Text>
-            <Text style={styles.detailValue}>
-              {appointmentData.patient.age}
-            </Text>
-          </View>
-        </View>
-        </View>
-      </View>
-
+      <HeaderComponent
+        title={"Appointment Details"}
+        rightButton={false}
+        onBackPress={() => {
+          // navigation.goBack();
+        }}
+      />
       <ScrollView style={styles.scrollView}>
-        {/* Patient Details Card */}
-        {/* <View style={styles.card}>
-          <View style={styles.profileRow}>
-            <View style={styles.avatar}></View>
-            <View style={styles.profileInfo}>
-              <Text style={styles.profileName}>
-                {appointmentData.patient.name}
-              </Text>
-              <Text style={styles.profileRole}>
-                {appointmentData.patient.role}
-              </Text>
+        <View style={styles.headerContainer}>
+          <View style={styles.profileContainer}>
+            <View style={styles.profileRow}>
+              <Image
+                style={styles.avatar}
+                source={require("../../assets/avatar.png")}
+              />
+              <View style={styles.profileInfo}>
+                <Text style={styles.profileName}>
+                  {appointmentData.patient.name}
+                </Text>
+                <Text style={styles.profileRole}>
+                  {appointmentData.patient.role}
+                </Text>
+              </View>
             </View>
-          </View>
 
-          <View style={styles.timeContainer}>
-            <Text style={styles.timeText}>
-              {appointmentData.appointment.time}{" "}
-              {appointmentData.appointment.date}
-            </Text>
-          </View>
+            <View style={styles.timeContainer}>
+              <Text style={styles.timeText}>
+                {appointmentData.appointment.time}{" "}
+                {appointmentData.appointment.date}
+              </Text>
+            </View>
 
-          <View style={styles.detailsRow}>
-            <View style={styles.detailColumn}>
-              <Text style={styles.detailLabel}>Patient no.</Text>
-              <Text style={styles.detailValue}>
-                {appointmentData.patient.patientNo}
-              </Text>
-            </View>
-            <View style={styles.detailColumn}>
-              <Text style={styles.detailLabel}>Gender</Text>
-              <Text style={styles.detailValue}>
-                {appointmentData.patient.gender}
-              </Text>
-            </View>
-            <View style={styles.detailColumn}>
-              <Text style={styles.detailLabel}>Age</Text>
-              <Text style={styles.detailValue}>
-                {appointmentData.patient.age}
-              </Text>
+            <View style={styles.detailsRow}>
+              <View style={styles.detailColumn}>
+                <Text style={styles.detailLabel}>Patient no.</Text>
+                <Text style={styles.detailValue}>
+                  {appointmentData.patient.patientNo}
+                </Text>
+              </View>
+              <View style={styles.detailColumn}>
+                <Text style={styles.detailLabel}>Gender</Text>
+                <Text style={styles.detailValue}>
+                  {appointmentData.patient.gender}
+                </Text>
+              </View>
+              <View style={styles.detailColumn}>
+                <Text style={styles.detailLabel}>Age</Text>
+                <Text style={styles.detailValue}>
+                  {appointmentData.patient.age}
+                </Text>
+              </View>
             </View>
           </View>
-        </View> */}
+        </View>
 
         {/* Doctor Details Card */}
         <View style={styles.card}>
           <View style={styles.profileRow}>
-            <View style={styles.avatar}></View>
+            <Image
+              style={styles.avatar}
+              source={require("../../assets/avatar.png")}
+            />
             <View style={styles.profileInfo}>
               {appointmentData.doctor.isProfessional && (
                 <View style={styles.badgeContainer}>
-                  <View style={styles.badgeCircle}>
+                  <Image
+                    style={styles.badgeImage}
+                    source={require("../../assets/Frame.png")}
+                  />
+                  {/* <View style={styles.badgeCircle}>
                     <Ionicons name="checkmark" size={12} color="#fff" />
-                  </View>
+                  </View> */}
                   <Text style={styles.badgeText}>Professional Doctor</Text>
                 </View>
               )}
@@ -187,7 +154,10 @@ const AppointmentDetails = ({ navigation }) => {
         {/* Bottom Info Cards */}
         <View style={styles.bottomCardsContainer}>
           <View style={styles.infoCard}>
-            <Ionicons name="calendar" size={20} color="#000" />
+            <Image
+              // style={styles.infoCardIcon}
+              source={require("../../assets/cardImg.png")}
+            />
             <Text style={styles.infoCardValue}>
               {appointmentData.appointment.lastAppointment}
             </Text>
@@ -195,7 +165,9 @@ const AppointmentDetails = ({ navigation }) => {
           </View>
 
           <View style={styles.infoCard}>
-            <Ionicons name="card" size={20} color="#000" />
+            <Image
+              source={require("../../assets/walletImg.png")}
+            />
             <Text style={styles.infoCardValue}>
               {appointmentData.appointment.lastPayment}
             </Text>
@@ -203,7 +175,9 @@ const AppointmentDetails = ({ navigation }) => {
           </View>
 
           <View style={styles.infoCard}>
-            <Ionicons name="briefcase" size={20} color="#000" />
+            <Image
+              source={require("../../assets/firstaid.png")}
+            />
             <Text style={styles.infoCardValue}>
               {appointmentData.appointment.pendingAmount}
             </Text>
@@ -211,7 +185,9 @@ const AppointmentDetails = ({ navigation }) => {
           </View>
 
           <View style={styles.infoCard}>
-            <Ionicons name="document-text" size={20} color="#000" />
+            <Image
+              source={require("../../assets/calendarImg.png")}
+            />
             <Text style={styles.infoCardValue}>
               {appointmentData.appointment.lastTreatmentAmount}
             </Text>
@@ -226,26 +202,27 @@ const AppointmentDetails = ({ navigation }) => {
       <View style={styles.buttonContainer}>
         <TouchableOpacity
           style={styles.actionButton}
-          onPress={() => navigation.navigate("Billing")}
+          // onPress={() => navigation.navigate("Billing")}
         >
           <Text style={styles.buttonText}>Go to Billing</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
           style={styles.actionButton}
-          onPress={() => navigation.navigate("Notes")}
+          // onPress={() => navigation.navigate("Notes")}
         >
           <Text style={styles.buttonText}>Go to Notes</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
-  );
+);
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f5f5f5",
+    backgroundColor: "#E8E9E9",
+    paddingTop: 50,
   },
   headerContainer: {
     flexDirection: "column",
@@ -290,13 +267,9 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     borderRadius: 29,
     padding: 16,
-    margin: 16,
+    marginHorizontal: "2%",
     marginBottom: 8,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
+    marginTop: 10,
   },
   profileRow: {
     flexDirection: "row",
@@ -304,10 +277,10 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   avatar: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    backgroundColor: "#e0e0e0",
+    // width: 111,
+    // height: 111,
+    // borderRadius: 30,
+    // backgroundColor: "#e0e0e0",
   },
   profileInfo: {
     marginLeft: 16,
@@ -315,11 +288,12 @@ const styles = StyleSheet.create({
   },
   profileName: {
     fontSize: 18,
-    fontWeight: "600",
+    fontWeight: "700",
   },
   profileRole: {
     fontSize: 14,
-    color: "#666",
+    fontWeight: "400",
+    color: "#71717A",
   },
   specialization: {
     fontSize: 14,
@@ -328,32 +302,54 @@ const styles = StyleSheet.create({
   },
   timeContainer: {
     marginBottom: 16,
+    backgroundColor: "#EFF6FF",
+    width: "70%",
+    padding: 10,
+    paddingLeft: 14,
+    borderRadius: 30,
   },
   timeText: {
     fontSize: 14,
-    color: "#666",
+    fontWeight: "500",
+    color: "#27272A",
   },
   detailsRow: {
     flexDirection: "row",
     justifyContent: "space-between",
+    padding: 16,
   },
   detailColumn: {
     flex: 1,
   },
   detailLabel: {
     fontSize: 14,
-    color: "#666",
+    fontWeight: "600",
+    color: "#94A3B8",
     marginBottom: 4,
   },
   detailValue: {
     fontSize: 16,
-    fontWeight: "500",
+    fontWeight: "600",
+    color:"#000000",
+
   },
   badgeContainer: {
+    backgroundColor:"#EFF6FF",
     flexDirection: "row",
     alignItems: "center",
     marginBottom: 4,
+    padding: 10,
+    borderRadius: 30,
+    width: "70%",
+    paddingLeft: 14,
+    // rowGap: 4,
+    columnGap: 4,
   },
+  badgeImage: {
+    width: 18,
+    height: 18,
+  },
+  
   badgeCircle: {
     width: 16,
     height: 16,
@@ -374,25 +370,23 @@ const styles = StyleSheet.create({
   },
   infoCard: {
     backgroundColor: "#fff",
-    borderRadius: 12,
+    borderRadius: 21,
     padding: 16,
     margin: 8,
     width: "45%",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-    elevation: 1,
   },
   infoCardValue: {
-    fontSize: 16,
-    fontWeight: "600",
-    marginTop: 8,
+    paddingTop: 8,
+    fontSize: 18,
+    fontWeight: "700",
+    marginTop: 12,
+    color: "#000000",
   },
   infoCardLabel: {
-    fontSize: 12,
-    color: "#666",
-    marginTop: 4,
+    fontSize: 14,
+    fontWeight: "400",
+    color: "#64748B",  
+    marginTop: 8,
   },
   buttonContainer: {
     flexDirection: "row",
@@ -400,7 +394,7 @@ const styles = StyleSheet.create({
   },
   actionButton: {
     flex: 1,
-    backgroundColor: "#8BC34A",
+    backgroundColor: "#84CC16",
     borderRadius: 24,
     padding: 16,
     margin: 8,
