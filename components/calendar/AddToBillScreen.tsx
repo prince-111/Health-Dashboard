@@ -46,7 +46,7 @@ const ProductService = ( item : any) => (
 );
 
 //{ onContinue, onBack }
-const AddToBillScreen = ({ navigation }) => {
+const AddToBillScreen = () => {
   const implantItems = [
     {
       id: 1,
@@ -92,7 +92,7 @@ const AddToBillScreen = ({ navigation }) => {
         title={"Add to Bill"}
         rightButton={false}
         onBackPress={() => {
-          navigation.goBack();
+          // navigation.goBack();
         }}
       />
       <View style={styles.progressContainer}>
