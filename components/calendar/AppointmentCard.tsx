@@ -1,7 +1,6 @@
 import React from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import { styles } from "./styles";
-import { router } from "expo-router";
 
 export interface Appointment {
   id: string;

@@ -1,28 +1,30 @@
-import React from "react";
+import { HeaderComponent } from "@/components/HeaderComponent";
+import React, { useState } from "react";
 import {
   View,
   Text,
   TouchableOpacity,
   StyleSheet,
   TextInput,
+  Image,
+  ScrollView,
 } from "react-native";
 
-// Custom Icon Components
-const BackIcon = () => (
+const ArrowRightIcon = () => (
   <View
     style={{
-      width: 24,
-      height: 24,
+      width: 20,
+      height: 20,
       justifyContent: "center",
       alignItems: "center",
     }}
   >
     <View
       style={{
-        width: 10,
-        height: 10,
-        borderLeftWidth: 2,
-        borderBottomWidth: 2,
+        width: 7,
+        height: 7,
+        borderRightWidth: 2,
+        borderTopWidth: 2,
         transform: [{ rotate: "45deg" }],
         borderColor: "#000",
       }}
@@ -30,135 +32,100 @@ const BackIcon = () => (
   </View>
 );
 
-const ChevronRightIcon = () => (
-  <View
-    style={{
-      width: 24,
-      height: 24,
-      justifyContent: "center",
-      alignItems: "center",
-    }}
-  >
-    <View
-      style={{
-        width: 8,
-        height: 8,
-        borderRightWidth: 2,
-        borderTopWidth: 2,
-        transform: [{ rotate: "45deg" }],
-        borderColor: "#fff",
-      }}
-    />
-  </View>
-);
-
-// Step 2: Billing Summary Screen
 //{ onContinue, onBack }
 const BillingSummaryScreen = () => {
+
   const treatmentItems = [
     { id: 1, title: "2 Teeth", quantity: 1, price: "₹4,800.00" },
     { id: 2, title: "3-4 Teeth", quantity: 1, price: "₹4,800.00" },
     { id: 3, title: "3-4 Units", quantity: 1, price: "₹4,800.00" },
   ];
 
+
   return (
-    <View style={styles.screen}>
-      <View style={styles.header}>
-        <TouchableOpacity
-          // onPress={onBack}
-          style={styles.backButton}
-        >
-          <BackIcon />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Billing Summary</Text>
-      </View>
-
-      <View style={styles.progressContainer}>
-        <View style={styles.progressDot1} />
-        <View style={[styles.progressDot2, styles.activeDot]} />
-        <View style={styles.progressDot3} />
-      </View>
-
-      <TouchableOpacity style={styles.verifyItemsButton}>
-        <Text style={styles.verifyItemsText}>Verify items</Text>
-      </TouchableOpacity>
-
-      <Text style={styles.infoText}>
-        Ensure all items are being billed correctly. Change invoiced amount or
-        add discounts.
-      </Text>
-
-      <Text style={styles.sectionTitle}>Treatments & Products</Text>
-
-      <View style={styles.treatmentList}>
-        {treatmentItems.map(item => (
-          <TouchableOpacity key={item.id} style={styles.treatmentItem}>
-            <View style={styles.treatmentDetails}>
-              <Text style={styles.treatmentTitle}>{item.title}</Text>
-              <Text style={styles.treatmentQuantity}>x{item.quantity}</Text>
-            </View>
-            <View style={styles.treatmentPrice}>
-              <Text style={styles.priceText}>{item.price}</Text>
-              <View
-                style={{
-                  width: 20,
-                  height: 20,
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <View
-                  style={{
-                    width: 7,
-                    height: 7,
-                    borderRightWidth: 2,
-                    borderTopWidth: 2,
-                    transform: [{ rotate: "45deg" }],
-                    borderColor: "#000",
-                  }}
-                />
-              </View>
-            </View>
-          </TouchableOpacity>
-        ))}
-      </View>
-
-      <View style={styles.discountContainer}>
-        <TextInput
-          style={styles.discountInput}
-          placeholder="Add Discount Code here"
-          placeholderTextColor="#777"
+      <View style={styles.screen}>
+        <HeaderComponent
+          title={"Billing Summary"}
+          rightButton={false}
+          onBackPress={() => {
+            // navigation.goBack();
+          }}
         />
-        <TouchableOpacity style={styles.submitButton}>
-          <Text style={styles.submitButtonText}>Submit</Text>
+
+        <View style={styles.progressContainer}>
+          <Image source={require("../../assets/Union2.png")} />
+          <Image source={require("../../assets/Union.png")} />
+          <Image source={require("../../assets/Union2.png")} />
+        </View>
+
+        <TouchableOpacity style={styles.verifyItemsButton}>
+          <Text style={styles.verifyItemsText}>Verify items</Text>
+        </TouchableOpacity>
+
+        <ScrollView>
+          <View style={styles.infoContainer}>
+            <Text style={styles.infoText}>
+              Ensure all items are being billed correctly. Change invoiced
+              amount or add discounts.
+            </Text>
+
+            <Text style={styles.sectionTitle}>Treatments & Products</Text>
+
+            <View style={styles.treatmentList}>
+              {treatmentItems.map(item => (
+                <TouchableOpacity key={item.id} style={styles.treatmentItem}>
+                  <View style={styles.treatmentDetails}>
+                    <Text style={styles.treatmentTitle}>{item.title}</Text>
+                    <Text style={styles.treatmentQuantity}>
+                      x{item.quantity}
+                    </Text>
+                  </View>
+                  <View style={styles.treatmentPrice}>
+                    <Text style={styles.priceText}>{item.price}</Text>
+                    <ArrowRightIcon />
+                  </View>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </View>
+
+          <View style={styles.discountContainer}>
+            <TextInput
+              style={styles.discountInput}
+              placeholder="Add Discount Code here"
+              placeholderTextColor="#777"
+            />
+            <TouchableOpacity style={styles.submitButton}>
+              <Text style={styles.submitButtonText}>Submit</Text>
+            </TouchableOpacity>
+          </View>
+
+          <View style={styles.summaryContainer}>
+            <View style={styles.summaryRow}>
+              <Text style={styles.summaryLabel}>GST</Text>
+              <Text style={styles.summaryValue}>₹480.00</Text>
+            </View>
+            <View style={styles.summaryRow}>
+              <Text style={styles.summaryLabel}>Amount</Text>
+              <Text style={styles.summaryValue}>₹4,800.00</Text>
+            </View>
+            <View style={styles.summaryRow}>
+              <Text style={styles.summaryLabel}>Invoiced Amount</Text>
+              <Text style={styles.summaryValue}>₹14,800.00</Text>
+            </View>
+          </View>
+        </ScrollView>
+
+        <TouchableOpacity
+          style={styles.continueButton}
+          //   onPress={onContinue}
+        >
+          <Text style={styles.continueButtonText}>Continue to Next Step</Text>
+          <View style={styles.arrowContainer}>
+            <Image source={require("../../assets/forwardRight.png")} />
+          </View>
         </TouchableOpacity>
       </View>
-
-      <View style={styles.summaryContainer}>
-        <View style={styles.summaryRow}>
-          <Text style={styles.summaryLabel}>GST</Text>
-          <Text style={styles.summaryValue}>₹480.00</Text>
-        </View>
-        <View style={styles.summaryRow}>
-          <Text style={styles.summaryLabel}>Amount</Text>
-          <Text style={styles.summaryValue}>₹4,800.00</Text>
-        </View>
-        <View style={styles.summaryRow}>
-          <Text style={styles.summaryLabel}>Invoiced Amount</Text>
-          <Text style={styles.summaryValue}>₹14,800.00</Text>
-        </View>
-      </View>
-
-      <TouchableOpacity
-        style={styles.continueButton}
-        //    onPress={onContinue}
-      >
-        <Text style={styles.continueButtonText}>Continue to Next Step</Text>
-        <View style={styles.arrowContainer}>
-          <ChevronRightIcon />
-        </View>
-      </TouchableOpacity>
-    </View>
   );
 };
 
@@ -166,17 +133,31 @@ const styles = StyleSheet.create({
   screen: {
     flex: 1,
     paddingTop: 62,
-    padding: 6,
-    margin: 10,
-    backgroundColor: "#f5f5f5",
+    backgroundColor: "#E8E9E9",
   },
   header: {
     flexDirection: "row",
     alignItems: "center",
     marginBottom: 16,
   },
+  backButtonContainer: {
+    width: 60,
+    height: 60,
+    borderRadius: 50,
+    backgroundColor: "#fff",
+    justifyContent: "center",
+    alignItems: "center",
+  },
   backButton: {
     marginRight: 16,
+  },
+  headerTitleContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    alignContent: "center",
+    marginBottom: 10,
+    width: "70%",
   },
   headerTitle: {
     fontSize: 20,
@@ -187,28 +168,17 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginBottom: 20,
+    columnGap: 10,
+    marginTop: 10,
   },
-  progressDot1: {
-    width: 24,
-    height: 24,
-    borderRadius: 12,
-    backgroundColor: "#8CD867",
-    marginHorizontal: 8,
+  infoContainer: {
+    backgroundColor: "#fff",
+    borderRadius: 20,
+    padding: 8,
+    marginBottom: 16,
+    marginHorizontal: "2%",
   },
-  progressDot2: {
-    width: 24,
-    height: 24,
-    borderRadius: 12,
-    backgroundColor: "#D2EFC4",
-    marginHorizontal: 8,
-  },
-  progressDot3: {
-    width: 24,
-    height: 24,
-    borderRadius: 12,
-    backgroundColor: "#D2EFC4",
-    marginHorizontal: 8,
-  },
+
   activeDot: {
     backgroundColor: "#8CD867",
   },
@@ -227,9 +197,9 @@ const styles = StyleSheet.create({
   },
   infoText: {
     textAlign: "center",
-    color: "#666",
     marginBottom: 16,
-    paddingHorizontal: 32,
+    paddingHorizontal: 20,
+    marginTop: 8,
   },
   sectionTitle: {
     fontSize: 16,
@@ -238,15 +208,19 @@ const styles = StyleSheet.create({
   },
   treatmentList: {
     marginBottom: 16,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: "#E8E9E9",
+    overflow: "hidden",
   },
   treatmentItem: {
-    backgroundColor: "#fff",
-    borderRadius: 8,
+    backgroundColor: "#f8fafc",
     padding: 16,
-    marginBottom: 12,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
+    borderBottomWidth: 1,
+    borderBottomColor: "#E8E9E9",
   },
   treatmentDetails: {
     flexDirection: "row",
@@ -254,25 +228,29 @@ const styles = StyleSheet.create({
   },
   treatmentTitle: {
     fontSize: 16,
-    fontWeight: "500",
+    fontWeight: "600",
     marginRight: 8,
   },
   treatmentQuantity: {
     fontSize: 14,
-    color: "#666",
+    fontWeight: "400",
   },
   treatmentPrice: {
     flexDirection: "row",
     alignItems: "center",
   },
   priceText: {
-    fontSize: 15,
-    fontWeight: "500",
+    fontSize: 16,
+    fontWeight: "600",
     marginRight: 8,
   },
   discountContainer: {
+    backgroundColor: "#fff",
+    padding: 12,
     flexDirection: "row",
     marginBottom: 24,
+    marginHorizontal: "2%",
+    borderRadius: 30,
   },
   discountInput: {
     flex: 1,
@@ -282,8 +260,9 @@ const styles = StyleSheet.create({
     marginRight: 8,
   },
   submitButton: {
-    backgroundColor: "#8CD867",
-    borderRadius: 8,
+    backgroundColor: "#84CC16",
+    borderRadius: 40,
+    padding: 12,
     justifyContent: "center",
     alignItems: "center",
     paddingHorizontal: 16,
@@ -294,41 +273,48 @@ const styles = StyleSheet.create({
   },
   summaryContainer: {
     backgroundColor: "#fff",
-    borderRadius: 8,
-    padding: 16,
+    borderRadius: 20,
+    // padding: 16,
     marginBottom: 24,
+    marginHorizontal: "2%",
   },
   summaryRow: {
     flexDirection: "row",
     justifyContent: "space-between",
     marginBottom: 8,
+    padding: 14,
+    borderBottomWidth: 1,
+    borderColor: "#E8E9E9",
   },
   summaryLabel: {
-    color: "#666",
+    fontWeight: "400",
+    fontSize: 16,
   },
   summaryValue: {
-    fontWeight: "500",
+    fontWeight: "600",
+    fontSize: 18,
   },
   continueButton: {
-    backgroundColor: "#8CD867",
+    backgroundColor: "#84CC16",
     borderRadius: 32,
     paddingVertical: 16,
     paddingHorizontal: 24,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginTop: 8,
+    marginTop: 16,
     marginBottom: 16,
+    marginHorizontal: "6%",
   },
   continueButtonText: {
     color: "#fff",
-    fontWeight: "bold",
-    fontSize: 16,
+    fontWeight: "700",
+    fontSize: 18,
   },
   arrowContainer: {
-    backgroundColor: "rgba(255, 255, 255, 0.2)",
-    borderRadius: 16,
-    padding: 4,
+    width: 32,
+    height: 50,
+    marginEnd: 18,
   },
 });
 
