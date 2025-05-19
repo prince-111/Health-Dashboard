@@ -10,7 +10,7 @@ import {
   FlatList,
 } from "react-native";
 
-export const AppointmentItem = ({ item, handleOpenEditModal }: any) => (
+export const PatientAppointmentsList = ({ item, handleOpenEditModal }: any) => (
   <View style={styles.appointmentCard}>
     <View style={styles.doctorInfo}>
       {/* <View style={styles.avatarContainer}>
@@ -24,9 +24,7 @@ export const AppointmentItem = ({ item, handleOpenEditModal }: any) => (
         <Text style={styles.specialty}>{item.specialty}</Text>
       </View>
 
-      <TouchableOpacity style={styles.editButton} 
-      onPress={handleOpenEditModal}
-      >
+      <TouchableOpacity style={styles.editButton} onPress={handleOpenEditModal}>
         <Image
           style={styles.actionButtonImage}
           source={require("../assets/edit.png")}
