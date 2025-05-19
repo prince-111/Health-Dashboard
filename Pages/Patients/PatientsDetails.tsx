@@ -1,4 +1,4 @@
-import { AppointmentItem } from "@/components/AppointmentItem";
+import { AppointmentItem } from "@/components/PatientAppointmentsList";
 import { HeaderComponent } from "@/components/HeaderComponent";
 import React from "react";
 import { View, StyleSheet, Text, SafeAreaView, Image, ScrollView, TouchableOpacity, FlatList } from "react-native";
@@ -208,92 +208,6 @@ const styles = StyleSheet.create({
   listContainer: {
     paddingBottom: 16,
   },
-  // appointmentCard: {
-  //   backgroundColor: "white",
-  //   borderRadius: 16,
-  //   marginBottom: 16,
-  //   padding: 16,
-  //   shadowColor: "#000",
-  //   shadowOffset: { width: 0, height: 2 },
-  //   shadowOpacity: 0.05,
-  //   shadowRadius: 4,
-  //   elevation: 2,
-  // },
-  // doctorInfo: {
-  //   flexDirection: "row",
-  //   alignItems: "center",
-  //   marginBottom: 16,
-  // },
-  // avatarContainer: {
-  //   width: 40,
-  //   height: 40,
-  //   borderRadius: 20,
-  //   backgroundColor: "#ffccd0",
-  //   justifyContent: "center",
-  //   alignItems: "center",
-  //   overflow: "hidden",
-  // },
-  // doctorDetails: {
-  //   flex: 1,
-  //   marginLeft: 12,
-  // },
-  // doctorName: {
-  //   fontSize: 16,
-  //   fontWeight: "bold",
-  //   color: "#000",
-  // },
-  // specialty: {
-  //   fontSize: 14,
-  //   color: "#a0a0a0",
-  // },
-  // callButton: {
-  //   width: 40,
-  //   height: 40,
-  //   borderRadius: 20,
-  //   backgroundColor: "#f0f0f0",
-  //   justifyContent: "center",
-  //   alignItems: "center",
-  // },
-  // appointmentDetails: {
-  //   flexDirection: "row",
-  //   justifyContent: "space-between",
-  // },
-  // dateContainer: {
-  //   flexDirection: "row",
-  //   alignItems: "center",
-  // },
-  // calendarIcon: {
-  //   width: 24,
-  //   height: 24,
-  //   justifyContent: "center",
-  //   alignItems: "center",
-  // },
-  // calendarIconText: {
-  //   fontSize: 16,
-  // },
-  // dateText: {
-  //   marginLeft: 8,
-  //   fontSize: 14,
-  //   color: "#808080",
-  // },
-  // timeContainer: {
-  //   flexDirection: "row",
-  //   alignItems: "center",
-  // },
-  // clockIcon: {
-  //   width: 24,
-  //   height: 24,
-  //   justifyContent: "center",
-  //   alignItems: "center",
-  // },
-  // clockIconText: {
-  //   fontSize: 16,
-  // },
-  // timeText: {
-  //   marginLeft: 8,
-  //   fontSize: 14,
-  //   color: "#808080",
-  // },
 });
 
 export default PatientsDetailsScreen;
