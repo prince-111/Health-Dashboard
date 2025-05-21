@@ -265,11 +265,11 @@ const styles = StyleSheet.create({
     backgroundColor: "#f1f1f1",
     width: 36,
     height: 36,
+    flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
   },
   closeButton: {
-    fontSize: 16,
     color: "#555",
     fontWeight: "600",
     textAlign: "center",
