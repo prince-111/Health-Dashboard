@@ -1,7 +1,7 @@
-import { AppointmentItem } from "@/components/PatientAppointmentsList";
 import { HeaderComponent } from "@/components/HeaderComponent";
 import React from "react";
 import { View, StyleSheet, Text, SafeAreaView, Image, ScrollView, TouchableOpacity, FlatList } from "react-native";
+import PatientPaymentLists from "../Payments/PatientPaymentLists";
 
 const PatientsDetailsScreen = () => { 
     const appointments = [
@@ -9,7 +9,7 @@ const PatientsDetailsScreen = () => {
         id: "1",
         doctor: "Dr. Abdul Moiz",
         specialty: "Plastic Surgeon",
-        date: "Monday, 26 July",
+        date: "Monday, 26 July",     
         time: "09:00 - 10:00",
       },
       {
@@ -88,7 +88,7 @@ const PatientsDetailsScreen = () => {
 
           <FlatList
             data={appointments}
-            renderItem={({ item }) => <AppointmentItem item={item} />}
+            renderItem={({ item }) => <PatientPaymentLists item={item} />}
             keyExtractor={item => item.id}
             showsVerticalScrollIndicator={false}
             contentContainerStyle={styles.listContainer}
