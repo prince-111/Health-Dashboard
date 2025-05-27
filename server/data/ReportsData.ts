@@ -1,3 +1,87 @@
+// Sample data for different report types
+export const reportsData = [
+  {
+    id: 1,
+    date: "Jan 23, 2025",
+    time: "11:12 AM",
+    name: "Appointments",
+    status: "Optimal Cardiovascular",
+    chartData: [
+      { value: 15 },
+      { value: 35 },
+      { value: 65 },
+      { value: 45 },
+      { value: 35 },
+      { value: 10 },
+      { value: 20 },
+      { value: 30 },
+      { value: 40 },
+      { value: 50 },
+    ],
+    chartColor: "#84CC16",
+  },
+  {
+    id: 2,
+    date: "Jan 22, 2025",
+    time: "10:11 AM",
+    name: "Patients",
+    status: "Unstable Blood Level",
+    chartData: [
+      { value: 15 },
+      { value: 25 },
+      { value: 15 },
+      { value: 35 },
+      { value: 45 },
+      { value: 65 },
+      { value: 45 },
+      { value: 55 },
+      { value: 65 },
+      { value: 75 },
+    ],
+    chartColor: "#FACC15",
+  },
+  {
+    id: 3,
+    date: "Jan 21, 2025",
+    time: "09:32 AM",
+    name: "Invoices",
+    status: "High Cholesterol",
+    chartData: [
+      { value: 10 },
+      { value: 20 },
+      { value: 30 },
+      { value: 40 },
+      { value: 35 },
+      { value: 25 },
+      { value: 15 },
+      { value: 5 },
+      { value: 10 },
+      { value: 20 },
+    ],
+    chartColor: "#F44336",
+  },
+  {
+    id: 4,
+    date: "Jan 22, 2025",
+    time: "10:11 AM",
+    name: "Payment",
+    status: "Unstable Blood Level",
+    chartData: [
+      { value: 15 },
+      { value: 35 },
+      { value: 45 },
+      { value: 65 },
+      { value: 25 },
+      { value: 15 },
+      { value: 45 },
+      { value: 55 },
+      { value: 65 },
+      { value: 75 },
+    ],
+    chartColor: "#FACC15",
+  },
+];
+
 export const allReportsData = {
   Payments: {
     primary: [
@@ -135,4 +219,22 @@ export const allReportsData = {
       { value: 75, label: "Aug", date: "2024-08" },
     ],
   },
+};
+
+ // Appointment stats data
+export const appointmentStats = {
+  total: 184,
+  growth: 46.9,
+  booked: 184,
+  cancelled: 184,
+  newPatients: 184,
+  repeatPatients: 184,
+};
+
+// Revenue stats data
+export const revenueStats = {
+  total: "₹8,95,022.55",
+  growth: 46.9,
+  paid: "₹8,95,022.55",
+  pending: "₹8,95,022.55",
 };
