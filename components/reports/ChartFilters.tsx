@@ -1,5 +1,5 @@
 import React from "react";
-import { View, TouchableOpacity, Text } from "react-native";
+import { View, TouchableOpacity, Text, Image } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { styles } from "./styles";
 import { ChartFiltersProps } from "./types";
@@ -15,7 +15,11 @@ export const ChartFilters: React.FC<ChartFiltersProps> = ({
   return (
     <View style={styles.headerContainer}>
       <View style={styles.titleContainer}>
-        <Ionicons name="flash" size={16} color="#10b981" />
+        <Image
+          source={require("../../assets/flash.png")}
+          style={styles.statsIconImage}
+        />
+        {/* <Ionicons name="flash" size={16} color="#10b981" /> */}
         <Text style={styles.title}>Reports</Text>
       </View>
       <View style={styles.filterContainer}>
@@ -24,7 +28,10 @@ export const ChartFilters: React.FC<ChartFiltersProps> = ({
           onPress={() => setPaymentType(paymentType)}
         >
           <Text style={styles.filterButtonText}>{paymentType}</Text>
-          <Text style={styles.chevron}>▼</Text>
+          <Image
+            source={require("../../assets/dropdown.png")}
+            style={{ width: 24, height: 24, }}
+          />
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -32,7 +39,10 @@ export const ChartFilters: React.FC<ChartFiltersProps> = ({
           onPress={() => setTimeFilter(timeFilter)}
         >
           <Text style={styles.filterButtonText}>{timeFilter}</Text>
-          <Text style={styles.chevron}>▼</Text>
+          <Image
+            source={require("../../assets/dropdown.png")}
+            style={{ width: 24, height: 24, }}
+          />
         </TouchableOpacity>
       </View>
     </View>
