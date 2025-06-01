@@ -35,11 +35,11 @@ const ReportCard = ({
           {unit && <Text style={styles.unit}>{unit}</Text>}
           {percentage && (
             <View style={styles.percentageContainer}>
-              <Ionicons
+              {/* <Ionicons
                 name={isPositive ? "arrow-up" : "arrow-down"}
                 size={14}
                 color="green"
-              />
+              /> */}
               <Text style={styles.percentageText}>{percentage}%</Text>
             </View>
           )}
@@ -110,7 +110,7 @@ const ReportCard = ({
 
 const styles = StyleSheet.create({
   container: {
-    borderRadius: 12,
+    borderRadius: 20,
     padding: 16,
     width: "48%",
     height: 200,

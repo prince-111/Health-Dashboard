@@ -17,6 +17,11 @@ export const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
   },
+  statsIconImage: {
+    width: 20,
+    height: 20,
+    // marginRight: 8,
+  },
   title: {
     fontSize: 18,
     fontWeight: "bold",
@@ -29,13 +34,14 @@ export const styles = StyleSheet.create({
   filterButton: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#F0F0F5",
+    backgroundColor: "#F1F5F9",
     paddingHorizontal: 12,
     paddingVertical: 8,
     borderRadius: 20,
   },
   filterButtonText: {
-    fontSize: 14,
+    fontSize: 12,
+    fontWeight: "600",
     color: "#333",
     marginRight: 4,
   },
